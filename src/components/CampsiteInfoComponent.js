@@ -21,7 +21,7 @@ function RenderCampsite({campsite}) {
         )
     }
 
-function RenderComments({comments, addComment, campsiteId}) {
+function RenderComments({comments, postComment, campsiteId}) {
         if(comments) {
             return(
                 <div className="col-md-5 m-1">
@@ -35,7 +35,7 @@ function RenderComments({comments, addComment, campsiteId}) {
                             </div>
                         );
                     })}
-                    <CommentForm campsiteId={campsiteId} addComment={addComment} />
+                    <CommentForm campsiteId={campsiteId} postComment={postComment} />
                 </div>
             );
         }
@@ -47,8 +47,9 @@ class CommentForm extends Component {
         super(props);
         this.state= {
             isModalOpen : false
-        }
+        };
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     toggleModal() {
@@ -59,7 +60,7 @@ class CommentForm extends Component {
 
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+        this.props.postComment(this.props.campsiteId, values.rating, values.author, values.text);
     }
 
     render() {
@@ -73,7 +74,7 @@ class CommentForm extends Component {
                     <ModalBody>
                         <LocalForm onSubmit={values => this.handleSubmit(values)}>
                             <div className="form-group">
-                                <Label htmlFor="Rating" md={2}>Rating</Label>
+                                <Label htmlFor="rating" md={2}>Rating</Label>
                                 <Control.select model=".rating" id="rating" name="rating"
                                     placeholder="rating"
                                     className="form-control" defaultValue="1">
@@ -108,7 +109,7 @@ class CommentForm extends Component {
                                   
                             </div>
                             <div className="form-group">
-                            <Label htmlFor="text" md={2}>Comment</Label>
+                                <Label htmlFor="text" md={2}>Comment</Label>
                                 <Control.textarea model=".text" id="text" name="text"
                                         className="form-control" />
                             </div>
@@ -146,7 +147,6 @@ function CampsiteInfo(props) {
         return (
             <div className="container">
                 <div className="row">
-                    <Loading />
                     <div className="col">
                         <Breadcrumb>
                             <BreadcrumbItem><Link to="/directory">Directory</Link></BreadcrumbItem>
@@ -158,9 +158,9 @@ function CampsiteInfo(props) {
                 </div>  
                 <div className = "row">
                     <RenderCampsite campsite={props.campsite} />
-                    <RenderComments 
-                        comments={props.comments} 
-                        addComment={props.addComment}
+                    <RenderComments
+                        comments={props.comments}
+                        postComment={props.postComment}
                         campsiteId={props.campsite.id}
                     />
                 </div>
